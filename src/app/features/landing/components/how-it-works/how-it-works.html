@@ -1,0 +1,22 @@
+<section class="how" id="procede">
+  <div class="shell">
+    <header class="head" [appReveal]="0">
+      <p class="lbl">§ 02 · Le procédé</p>
+      <h2>Du choix au code, en trois temps.</h2>
+      <p class="sub">
+        Calque n'héberge pas votre site et ne vous enferme nulle part. Il vous
+        livre le dépôt : une seule séquence, trois gestes.
+      </p>
+    </header>
+
+    <ol class="steps">
+      @for (step of steps; track step.title; let i = $index) {
+        <li class="step" [appReveal]="i * 110">
+          <span class="num">{{ '0' + (i + 1) }}<i>/0{{ steps.length }}</i></span>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>

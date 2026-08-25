@@ -1,0 +1,185 @@
+.preview {
+  padding: var(--section-y) 0;
+  border-top: 1px solid var(--line);
+}
+
+.head { max-width: 42rem; margin-bottom: 2.5rem; }
+.head h2 { font-size: clamp(1.9rem, 3.5vw, 2.7rem); margin-top: 1rem; font-weight: 600; }
+.sub { color: var(--ink-soft); margin: 0.9rem 0 0; font-size: 1.06rem; font-weight: 300; }
+
+/* Fenêtre d'aperçu — reprise du bloc « Aperçu en direct » du composeur */
+.viewer {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* ---------- Chrome navigateur ---------- */
+.preview-chrome {
+  display: flex;
+  align-items: center;
+  background: #16142a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 38px;
+}
+
+.preview-chrome-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  flex-shrink: 0;
+}
+.dot { display: block; width: 10px; height: 10px; border-radius: 50%; }
+.dot-red    { background: #ff5f57; }
+.dot-yellow { background: #ffbd2e; }
+.dot-green  { background: #28c840; }
+
+.preview-tabs {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+}
+.preview-tabs::-webkit-scrollbar { display: none; }
+
+.preview-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+  height: 38px;
+  border: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.13s ease, color 0.13s ease;
+  flex-shrink: 0;
+}
+.preview-tab svg { opacity: 0.4; flex-shrink: 0; }
+.preview-tab:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.65);
+}
+.preview-tab.is-active {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  border-bottom: 2px solid var(--violet);
+}
+.preview-tab.is-active svg { opacity: 0.9; color: #a78bfa; }
+
+.preview-chrome-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 14px;
+  flex-shrink: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+}
+.preview-chrome-url {
+  font-family: var(--font-mono);
+  font-size: 0.69rem;
+  color: rgba(255, 255, 255, 0.22);
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.preview-chrome-count {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  color: rgba(167, 139, 250, 0.45);
+  white-space: nowrap;
+}
+
+/* ---------- Rendu ---------- */
+.preview-body { background: var(--paper); }
+.preview-iframe {
+  display: block;
+  width: 100%;
+  height: 620px;
+  border: 0;
+}
+
+/* ---------- Pied : couleur + pile des briques ---------- */
+.viewer-foot {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+  padding: 1.1rem 1.25rem;
+  border-top: 1px solid var(--line);
+  background: var(--white);
+}
+
+.foot-title {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.6rem;
+}
+
+.accent-row { flex: none; }
+.swatches { display: flex; gap: 0.45rem; }
+.swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--line);
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+.swatch:hover { transform: translateY(-2px); }
+.swatch.is-on { box-shadow: 0 0 0 2px var(--white), 0 0 0 3px var(--ink); }
+
+.stack-row { flex: 1; min-width: 260px; }
+.stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.brick {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.brick .n {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--violet);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .preview-iframe { height: 480px; }
+  .preview-chrome-url { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preview-tab, .swatch { transition: none; }
+}

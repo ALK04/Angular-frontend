@@ -1,0 +1,41 @@
+<section class="output" id="livraison">
+  <div class="shell grid">
+
+    <div class="copy" [appReveal]="0">
+      <p class="lbl">§ 06 · La livraison</p>
+      <h2>Un dépôt, pas un site verrouillé.</h2>
+      <p class="sub">
+        Calque ne vous donne pas un compte ni un hébergement : il vous donne un
+        dossier. Un monorepo TypeScript propre, où chaque chose est à sa place et
+        où le thème que vous avez choisi est déjà écrit.
+      </p>
+
+      <ol class="run">
+        <li><span class="prompt">$</span> npm install <i>installe client &amp; serveur</i></li>
+        <li><span class="prompt">$</span> npm run dev <i>lance les deux d'un coup</i></li>
+      </ol>
+
+      <p class="kicker">À partir de là, c'est votre code. Vous l'ouvrez, vous le
+        modifiez, vous le déployez où vous voulez.</p>
+    </div>
+
+    <!-- Arborescence du projet généré -->
+    <figure class="tree" [appReveal]="120" aria-label="Arborescence du projet généré par Calque">
+      <figcaption class="tree-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="tree-name">mon-projet/</span>
+      </figcaption>
+
+      <pre class="tree-body"><code><span class="dir">client/</span><span class="cmt"># React · Vite · Tailwind</span>
+<span class="br">├─</span> <span class="dir">src/components/</span>
+<span class="br">├─</span> <span class="dir">src/pages/</span>
+<span class="br">└─</span> tailwind.config.js  <span class="mark">← votre thème</span>
+<span class="dir">server/</span><span class="cmt"># Express · TypeScript</span>
+<span class="br">└─</span> src/index.ts
+.env.example          <span class="cmt"># BDD à brancher plus tard</span>
+package.json          <span class="cmt"># npm workspaces</span>
+README.md             <span class="cmt"># le tuto dev pas à pas</span></code></pre>
+    </figure>
+
+  </div>
+</section>

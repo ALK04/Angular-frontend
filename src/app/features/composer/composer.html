@@ -1,0 +1,107 @@
+<div class="composer">
+
+  <!-- Barre supérieure -->
+  <header class="topbar">
+    <a class="back" routerLink="/">
+      <svg width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Calque
+    </a>
+    <span class="divider" aria-hidden="true">/</span>
+    <span class="crumb">Nouveau projet</span>
+    <span class="spacer"></span>
+
+    <!-- Sélecteur de couleur -->
+    <div class="palette" role="group" aria-label="Couleur d'accent">
+      <span class="palette-label">accent</span>
+      @for (a of accents; track a.id) {
+        <button
+          type="button"
+          class="swatch"
+          [class.is-on]="store.accent().id === a.id"
+          [style.--c]="a.default"
+          [title]="a.name"
+          [attr.aria-label]="a.name"
+          [attr.aria-pressed]="store.accent().id === a.id"
+          (click)="store.setAccent(a)"
+        ></button>
+      }
+    </div>
+  </header>
+
+  <!-- Fil d'étapes -->
+  <nav class="stepper" aria-label="Étapes de composition">
+    @for (step of steps; track step.id; let i = $index) {
+      <span class="step" [class.is-done]="i < currentStepIndex" [class.is-on]="i === currentStepIndex">
+        <span class="step-n">{{ i + 1 < 10 ? '0' + (i + 1) : i + 1 }}</span>
+        {{ step.label }}
+        @if (i < currentStepIndex) { <span class="check" aria-hidden="true">✓</span> }
+      </span>
+    }
+    <span class="stepper-tail">{{ steps.length }} étapes</span>
+  </nav>
+
+  <!-- Contenu principal -->
+  <main class="stage">
+
+    <!-- En-tête de section -->
+    <div class="stage-head">
+      <p class="eyebrow">Étape 01 · Navbar</p>
+      <h1>Quelle barre de navigation ?</h1>
+      <p class="sub">Aperçu réel — React + Tailwind. Ce que vous voyez est ce qui sera généré.</p>
+    </div>
+
+    <!-- Grille des variantes -->
+    <div class="cards">
+      @for (nav of navbars; track nav.id; let i = $index) {
+        <article class="card" [class.is-selected]="store.navbarId() === nav.id">
+
+          <!-- Chrome navigateur -->
+          <div class="chrome" aria-hidden="true">
+            <div class="chrome-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="chrome-url">localhost:5173</span>
+            <span class="chrome-idx">{{ i + 1 < 10 ? '0' + (i + 1) : i + 1 }}</span>
+          </div>
+
+          <!-- Aperçu iframe -->
+          <div class="frame">
+            <app-brick-preview [html]="nav.previewHtml" [accent]="store.accent()" />
+          </div>
+
+          <!-- Métadonnées -->
+          <footer class="card-foot">
+            <span class="card-name">{{ nav.name }}</span>
+            <span class="card-desc">{{ nav.description }}</span>
+            <button
+              type="button"
+              class="choose"
+              [class.is-chosen]="store.navbarId() === nav.id"
+              (click)="store.selectNavbar(nav.id)"
+            >
+              @if (store.navbarId() === nav.id) { Sélectionnée ✓ } @else { Choisir → }
+            </button>
+          </footer>
+
+        </article>
+      }
+    </div>
+  </main>
+
+  <!-- Barre d'action -->
+  <footer class="actionbar">
+    <span class="action-hint">
+      @if (store.canContinueNavbar()) {
+        Navbar sélectionnée · étape suivante : Structure
+      } @else {
+        Sélectionnez une navbar pour continuer
+      }
+    </span>
+    <button type="button" class="btn-next" [disabled]="!store.canContinueNavbar()" (click)="continue()">
+      Continuer →
+    </button>
+  </footer>
+
+</div>

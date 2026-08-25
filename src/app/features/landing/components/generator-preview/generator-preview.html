@@ -1,0 +1,91 @@
+<section class="preview" id="apercu">
+  <div class="shell">
+    <header class="head" [appReveal]="0">
+      <p class="lbl">§ 05 · L'aperçu</p>
+      <h2>Ce que vous voyez à la dernière étape.</h2>
+      <p class="sub">
+        Voici l'aperçu du composeur, tel quel : les briques choisies sont
+        empilées, la navbar reprend vos pages, la couleur d'accent repeint
+        l'ensemble. Changez d'onglet ou de teinte — c'est le rendu réel, pas une
+        capture d'écran.
+      </p>
+    </header>
+
+    <div class="viewer" [appReveal]="120">
+      <!-- Chrome navigateur : mêmes onglets de pages que dans le composeur -->
+      <div class="preview-chrome">
+        <div class="preview-chrome-dots" aria-hidden="true">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+
+        <div class="preview-tabs" role="tablist" aria-label="Pages du site composé">
+          @for (page of pages; track page.id) {
+            <button
+              type="button"
+              role="tab"
+              class="preview-tab"
+              [class.is-active]="activePage().id === page.id"
+              [attr.aria-selected]="activePage().id === page.id"
+              (click)="setPage(page.id)">
+              <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true">
+                <rect x="1" y="1" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.1"/>
+              </svg>
+              {{ page.name }}
+            </button>
+          }
+        </div>
+
+        <div class="preview-chrome-right">
+          <span class="preview-chrome-url">localhost:5173{{ activePage().url }}</span>
+          <span class="preview-chrome-count">
+            {{ sectionCount() }} brique{{ sectionCount() > 1 ? 's' : '' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Rendu réel des briques, dans une iframe isolée -->
+      <div class="preview-body">
+        <iframe
+          class="preview-iframe"
+          [srcdoc]="doc()"
+          title="Aperçu du site composé"
+          loading="lazy"
+          sandbox="allow-scripts"
+        ></iframe>
+      </div>
+
+      <!-- Pied : couleur d'accent + pile des briques de la page affichée -->
+      <div class="viewer-foot">
+        <div class="accent-row">
+          <span class="foot-title">Couleur</span>
+          <div class="swatches" role="group" aria-label="Couleur d'accent">
+            @for (a of accents; track a.id) {
+              <button
+                type="button"
+                class="swatch"
+                [class.is-on]="accent().id === a.id"
+                [style.background]="a.default"
+                [attr.aria-label]="a.name"
+                [attr.aria-pressed]="accent().id === a.id"
+                (click)="setAccent(a)"></button>
+            }
+          </div>
+        </div>
+
+        <div class="stack-row">
+          <span class="foot-title">Pile de la page</span>
+          <ol class="stack">
+            @for (brick of stack(); track $index) {
+              <li class="brick">
+                <span class="n">{{ ($index + 1 < 10 ? '0' : '') + ($index + 1) }}</span>
+                {{ brick.name }}
+              </li>
+            }
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

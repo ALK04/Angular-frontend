@@ -1,0 +1,15 @@
+<div class="pill" [style.--prog.%]="progress">
+  <div class="pill-fill"></div>
+  <div class="pill-content">
+    <span class="pill-step">{{ stepLabel }}</span>
+    <span class="pill-sep" aria-hidden="true">·</span>
+    <span class="pill-label">{{ currentLabel }}</span>
+    <span class="pill-count">{{ currentIndex + 1 }}&thinsp;/&thinsp;{{ totalSteps }}</span>
+  </div>
+  <div class="pill-track" role="progressbar"
+    [attr.aria-valuenow]="currentIndex + 1"
+    [attr.aria-valuemax]="totalSteps"
+    [attr.aria-label]="stepLabel + ' · ' + currentLabel">
+    <div class="pill-bar"></div>
+  </div>
+</div>

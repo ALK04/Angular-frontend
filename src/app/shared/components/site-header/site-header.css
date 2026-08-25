@@ -1,0 +1,122 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--paper) 80%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Barre de progression du défilement, posée sur la bordure basse */
+.scroll-progress {
+  position: absolute;
+  left: 0; bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--violet), var(--amber));
+  border-radius: 0 2px 2px 0;
+  transition: width 0.1s linear;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  height: 70px;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.16rem;
+  letter-spacing: -0.01em;
+}
+
+/* Marque = deux calques translucides empilés, clin d'œil au nom */
+.brand-mark {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  align-self: center;
+}
+.brand-mark .layer {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+}
+.brand-mark .layer {
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.brand-mark .layer:first-child {
+  top: 0; left: 0;
+  background: var(--violet);
+  opacity: 0.92;
+}
+.brand-mark .layer:last-child {
+  bottom: 0; right: 0;
+  background: var(--amber);
+  mix-blend-mode: multiply;
+}
+/* Les deux calques s'écartent légèrement au survol */
+.brand:hover .brand-mark .layer:first-child { transform: translate(-2px, -2px); }
+.brand:hover .brand-mark .layer:last-child { transform: translate(2px, 2px); }
+
+.brand-sub {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  transform: translateY(-1px);
+}
+
+.nav {
+  margin-left: auto;
+  display: flex;
+  gap: 1.9rem;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+.nav a {
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 0; height: 1px;
+  background: var(--violet);
+  transition: width 0.22s ease;
+}
+.nav a:hover { color: var(--ink); }
+.nav a:hover::after { width: 100%; }
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: var(--ink);
+  color: var(--white);
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  transition: transform 0.06s ease, background 0.25s ease;
+}
+.cta-arrow { transition: transform 0.25s ease; }
+.cta:hover { background: var(--violet); }
+.cta:hover .cta-arrow { transform: translateX(3px); }
+.cta:active { transform: translateY(1px); }
+
+@media (max-width: 760px) {
+  .nav { display: none; }
+  .bar { gap: 1rem; }
+  .brand-sub { display: none; }
+}

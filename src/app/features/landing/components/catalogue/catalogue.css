@@ -1,0 +1,227 @@
+.catalogue {
+  position: relative;
+  padding: var(--section-y) 0;
+  border-top: 1px solid var(--line);
+  overflow: hidden;
+}
+.catalogue .shell { position: relative; }
+
+.head { max-width: 44rem; margin-bottom: 2.5rem; }
+.head h2 { font-size: clamp(1.9rem, 3.5vw, 2.7rem); margin-top: 1rem; font-weight: 600; }
+.sub { color: var(--ink-soft); margin: 0.9rem 0 0; font-size: 1.06rem; font-weight: 300; }
+
+.families {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.family {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem 1.7rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--frost-strong);
+  backdrop-filter: blur(6px);
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+.family:hover {
+  transform: translateY(-6px);
+  border-color: var(--violet);
+  box-shadow: var(--shadow-soft);
+}
+
+.family-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+}
+.glyph svg { width: 40px; height: 28px; display: block; }
+.glyph rect {
+  fill: var(--ink);
+  transition: fill 0.25s ease, transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform-origin: center;
+}
+.glyph rect.ghost { fill: var(--paper-2); }
+/* Le wireframe « s'allume » au survol de la carte */
+.family:hover .glyph rect { fill: var(--violet); }
+.family:hover .glyph rect.ghost { fill: var(--violet-wash); }
+.family:hover .glyph rect:nth-child(2) { transform: translateX(2px); }
+
+.family-ref {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--violet);
+  background: var(--violet-wash);
+  border-radius: 6px;
+  padding: 0.1rem 0.5rem;
+}
+
+.family h3 { font-size: 1.22rem; font-weight: 600; margin-bottom: 0.25rem; }
+.count {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.mods {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 1.1rem 0 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 0.6rem;
+}
+.mod {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--ink);
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+.mod:hover { transform: translateX(4px); color: var(--violet-deep); }
+
+/* Pastille « disponible » : petit check violet */
+.tick {
+  position: relative;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--violet-wash);
+  flex: none;
+}
+.tick::after {
+  content: '';
+  position: absolute;
+  left: 4.5px; top: 2px;
+  width: 3px; height: 6px;
+  border: solid var(--violet);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+@media (max-width: 880px) {
+  .families { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+  .families { grid-template-columns: 1fr; }
+}
+
+/* ─── Compteurs (chiffres servis par la base) ─────────────────── */
+.counters {
+  list-style: none;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  padding: 1.4rem 1.4rem 1.5rem;
+  background: var(--frost-strong);
+  backdrop-filter: blur(6px);
+}
+
+.counter-value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.2vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.counter-label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.counter-note {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: var(--ink-faint);
+}
+
+/* Le compteur principal porte la couleur de marque */
+.counter--hero { background: var(--violet-wash); }
+.counter--hero .counter-value { color: var(--violet-deep); }
+.counter--hero .counter-note { color: var(--violet-deep); opacity: 0.7; }
+
+/* Gratuité : seule touche d'ambre de la section */
+.counter--free .counter-value { color: var(--ink); }
+.counter--free .counter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.counter--free .counter-label::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 3px rgba(255, 176, 32, 0.22);
+}
+
+/* Ligne de provenance des chiffres */
+.source {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 2.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+.source .sep { opacity: 0.5; }
+.live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+  flex: none;
+}
+.live-dot--off {
+  background: var(--ink-faint);
+  box-shadow: 0 0 0 3px rgba(138, 135, 156, 0.15);
+}
+
+/* ─── Modules : nom + nombre de variantes ─────────────────────── */
+.mod-name { flex: 1; }
+.mod-count {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.family:hover .mod-count { color: var(--violet); }
+
+@media (max-width: 880px) {
+  .counters { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+  .counters { grid-template-columns: 1fr; }
+}

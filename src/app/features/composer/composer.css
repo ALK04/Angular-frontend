@@ -1,0 +1,332 @@
+/* ===========================================================
+   Composer — page de sélection des briques
+   Fond sombre : le contenu généré (blanc) contraste clairement.
+   Signature : chaque aperçu est encadré d'un chrome navigateur.
+   =========================================================== */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #fff;
+  /* Fond profond avec halo violet top-left — donne de la profondeur */
+  background:
+    radial-gradient(ellipse 80% 55% at -5% 0%, rgba(91, 61, 245, 0.13) 0%, transparent 60%),
+    #0f0d1a;
+}
+
+/* ---- Topbar ---- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 32px;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  transition: color 0.12s;
+}
+.back:hover { color: #fff; }
+.back svg { flex-shrink: 0; }
+
+.divider { color: rgba(255, 255, 255, 0.18); font-size: 1rem; }
+
+.crumb {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.03em;
+}
+.spacer { flex: 1; }
+
+/* ---- Sélecteur couleur ---- */
+.palette {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.palette-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: lowercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.25);
+}
+.swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  background: var(--c);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.swatch:hover { transform: scale(1.2); }
+.swatch.is-on {
+  box-shadow: 0 0 0 2px #0f0d1a, 0 0 0 4px var(--c);
+}
+
+/* ---- Stepper ---- */
+.stepper {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding-inline: 32px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 20px;
+  height: 42px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.25);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  user-select: none;
+  white-space: nowrap;
+}
+.step.is-on {
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom-color: #5b3df5;
+}
+.step.is-done {
+  color: rgba(255, 255, 255, 0.45);
+  border-bottom-color: rgba(91, 61, 245, 0.4);
+}
+.step-n {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  opacity: 0.6;
+}
+.step.is-on .step-n { opacity: 1; color: #7c5ff8; }
+.step.is-done .step-n { color: #5b3df5; opacity: 0.8; }
+.check { font-size: 0.7rem; color: #5b3df5; }
+.stepper-tail {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.18);
+  align-self: center;
+}
+
+/* ---- Stage ---- */
+.stage {
+  flex: 1;
+  padding-block: 44px 72px;
+  max-width: 1060px;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.stage-head {
+  padding-inline: 32px;
+  max-width: 680px;
+  margin-bottom: 36px;
+}
+.stage-head .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #7c5ff8;
+  margin-bottom: 10px;
+}
+.stage-head h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0 0 10px;
+  line-height: 1.1;
+}
+.stage-head .sub {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.6;
+}
+
+/* ---- Cartes ---- */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-inline: 32px;
+}
+
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #1b1929;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.card.is-selected {
+  border-color: rgba(91, 61, 245, 0.6);
+  box-shadow:
+    0 0 0 3px rgba(91, 61, 245, 0.14),
+    0 8px 40px -8px rgba(91, 61, 245, 0.28);
+}
+
+/* Chrome navigateur — la signature de cette page */
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding-inline: 14px;
+  background: #0c0a17;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.chrome-dots {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.chrome-dots span {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.chrome-dots span:nth-child(1) { background: rgba(255, 96,  80,  0.55); }
+.chrome-dots span:nth-child(2) { background: rgba(255, 176, 32,  0.55); }
+.chrome-dots span:nth-child(3) { background: rgba(40,  195, 100, 0.45); }
+
+.chrome-url {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.22);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chrome-idx {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.14);
+  flex-shrink: 0;
+}
+
+/* Iframe */
+.frame {
+  background: #f8f9fc;
+  line-height: 0;
+}
+
+/* Footer de la carte */
+.card-foot {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.card-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+.card-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.3);
+  flex: 1;
+}
+.choose {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #7c5ff8;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.12s;
+}
+.choose:hover { color: #a08cf8; }
+.choose.is-chosen { color: #4ade80; }
+
+/* ---- Barre d'action ---- */
+.actionbar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 32px;
+  background: rgba(15, 13, 26, 0.92);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+.action-hint {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Bouton CTA — seul moment de l'ambre */
+.btn-next {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 0;
+  background: #ffb020;
+  color: #14121f;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s, transform 0.12s;
+  letter-spacing: -0.01em;
+}
+.btn-next:hover:not(:disabled) {
+  background: #ffc040;
+  transform: translateY(-1px);
+}
+.btn-next:active:not(:disabled) { transform: translateY(0); }
+.btn-next:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .topbar, .stepper, .stage-head, .cards, .actionbar {
+    padding-inline: 16px;
+  }
+  .step { padding-inline: 10px; font-size: 0.78rem; }
+  .stepper-tail { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .swatch, .choose, .btn-next { transition: none; }
+}

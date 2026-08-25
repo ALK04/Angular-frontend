@@ -1,0 +1,85 @@
+<section class="hero">
+  <span class="blueprint" aria-hidden="true"></span>
+
+  <div class="shell grid">
+
+    <!-- Thèse -->
+    <div class="copy">
+      <p class="lbl">Générateur de projet · React + Node</p>
+
+      <h1>
+        Composez votre interface.<br>
+        <span class="accent">Le code suit.</span>
+      </h1>
+
+      <p class="lede">
+        Calque est un atelier de composition. Vous empilez des modules (navbar,
+        hero, sections, footer), vous les répartissez sur vos pages, et vous
+        repartez avec un <strong>vrai dépôt React&nbsp;+&nbsp;Node</strong>,
+        structuré, documenté, prêt à coder. Aucun éditeur fermé, aucun lock-in :
+        le code vous appartient.
+      </p>
+
+      <div class="actions">
+        <a class="btn btn-primary" routerLink="/composer">
+          Composer mon projet <span aria-hidden="true">→</span>
+        </a>
+        <a class="btn btn-ghost" href="#procede">Voir le procédé</a>
+      </div>
+
+      <!-- Fiche technique : ce qu'on livre, en une ligne chacun -->
+      <dl class="spec">
+        <div class="spec-item">
+          <dt>Sortie</dt>
+          <dd>React · Vite · Tailwind · Express</dd>
+        </div>
+        <div class="spec-item">
+          <dt>Format</dt>
+          <dd>Monorepo · npm workspaces</dd>
+        </div>
+        <div class="spec-item">
+          <dt>Propriété</dt>
+          <dd>100&nbsp;% à vous, sans abonnement</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Signature : table à dessin, des calques translucides s'empilent en projet -->
+    <div class="plan" aria-hidden="true">
+      <div class="stack">
+
+        <!-- Calque du fond -->
+        <article class="sheet sheet-back">
+          <span class="sheet-tag">Footer</span>
+          <span class="wire wire-row"></span>
+        </article>
+
+        <!-- Calque actif -->
+        <article class="sheet sheet-mid">
+          <span class="sheet-tag">Hero</span>
+          <span class="wire wire-title"></span>
+          <span class="wire wire-line"></span>
+          <span class="wire wire-btn"></span>
+          <span class="anno anno-mid">calque actif</span>
+        </article>
+
+        <!-- Calque du dessus -->
+        <article class="sheet sheet-front">
+          <span class="sheet-tag">Navbar</span>
+          <span class="wire wire-nav"></span>
+        </article>
+
+      </div>
+
+      <!-- Résultat : la pile devient un projet -->
+      <div class="result">
+        <span class="result-glyph">$</span>
+        <span class="result-text">npm run dev</span>
+        <span class="result-meta">→ /projet généré</span>
+      </div>
+
+      <span class="anno anno-out">3&nbsp;calques · 1&nbsp;page</span>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,23 @@
+<section class="faq" id="questions">
+  <div class="shell grid">
+
+    <aside class="head" [appReveal]="0">
+      <p class="lbl">§ 07 · Questions</p>
+      <h2>Ce qu'on nous demande avant de se lancer.</h2>
+      <p class="sub">Une réponse directe à chaque doute légitime.</p>
+    </aside>
+
+    <dl class="list">
+      @for (item of items; track item.question; let i = $index) {
+        <div class="qa" [appReveal]="i * 70">
+          <dt>
+            <span class="q-index">{{ '0' + (i + 1) }}</span>
+            {{ item.question }}
+          </dt>
+          <dd>{{ item.answer }}</dd>
+        </div>
+      }
+    </dl>
+
+  </div>
+</section>

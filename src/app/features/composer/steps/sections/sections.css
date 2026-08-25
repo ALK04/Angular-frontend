@@ -1,0 +1,191 @@
+﻿/* Même base sombre que le composer */
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #fff;
+  background:
+    radial-gradient(ellipse 80% 55% at -5% 0%, rgba(91, 61, 245, 0.13) 0%, transparent 60%),
+    #0f0d1a;
+}
+
+
+/* ---- Stage ---- */
+.stage {
+  flex: 1;
+  padding-block: 70px 72px;
+  max-width: 1060px;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.stage-head {
+  padding-inline: 32px;
+  margin-bottom: 36px;
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #7c5ff8;
+  margin-bottom: 10px;
+}
+.stage-head h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0 0 10px;
+  line-height: 1.1;
+}
+.head-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.sub {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+.count-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: rgba(91, 61, 245, 0.2);
+  border: 1px solid rgba(91, 61, 245, 0.4);
+  color: #a08cf8;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---- Grille de sélection ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+  gap: 14px;
+  padding-inline: 32px;
+}
+
+/* ---- Carte de section ---- */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #1b1929;
+  border: 1.5px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+}
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+}
+.card.is-selected {
+  border-color: rgba(91, 61, 245, 0.65);
+  box-shadow:
+    0 0 0 3px rgba(91, 61, 245, 0.13),
+    0 6px 28px -4px rgba(91, 61, 245, 0.22);
+}
+
+/* Thumbnail SVG */
+.thumb {
+  width: 100%;
+  aspect-ratio: 5 / 3;
+  overflow: hidden;
+  line-height: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.thumb :global(svg),
+.thumb svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Badge de sélection */
+.badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #5b3df5;
+  color: #fff;
+  font-size: 0.7rem;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(91, 61, 245, 0.5);
+}
+
+/* Infos texte */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+}
+.card-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+.card-desc {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 1.4;
+}
+
+/* ---- Actionbar ---- */
+.actionbar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 32px;
+  background: rgba(15, 13, 26, 0.92);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+.action-hint {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+.btn-next {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 0;
+  background: #ffb020;
+  color: #14121f;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s, transform 0.12s;
+}
+.btn-next:hover:not(:disabled) {
+  background: #ffc040;
+  transform: translateY(-1px);
+}
+.btn-next:disabled { opacity: 0.25; cursor: not-allowed; }
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .stage-head, .grid, .actionbar { padding-inline: 16px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 10px; }
+}

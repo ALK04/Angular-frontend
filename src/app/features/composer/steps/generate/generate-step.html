@@ -1,0 +1,95 @@
+<div class="page">
+
+  <app-composer-topbar />
+
+  <app-step-pill [steps]="steps" [currentIndex]="currentStepIndex" />
+
+  <main class="stage">
+    <div class="stage-head">
+      <p class="eyebrow">{{ eyebrow }}</p>
+      <h1>Votre projet est prêt</h1>
+      <p class="sub">
+        Téléchargez le dossier, lancez <strong>npm install</strong> puis <strong>npm run dev</strong>.
+        Le code vous appartient — aucun compte, aucune dépendance à Calque.
+      </p>
+    </div>
+
+    <div class="cols">
+
+      <section class="panel">
+        <h2 class="panel-title">Nom du projet</h2>
+        <input
+          class="name-input"
+          type="text"
+          [value]="store.projectName()"
+          (input)="onNameInput($event)"
+          placeholder="Mon site"
+          aria-label="Nom du projet" />
+        <p class="panel-note">
+          Sert au nom du dossier, au titre de l'onglet et à <code>siteConfig.name</code>.
+        </p>
+
+        <h2 class="panel-title panel-title--spaced">Ce que contient l'archive</h2>
+        <ul class="recap">
+          <li>
+            <span class="recap-num">{{ contentPages().length }}</span>
+            <span class="recap-label">page(s) — une route et un fichier chacune</span>
+          </li>
+          <li>
+            <span class="recap-num">{{ sectionCount() }}</span>
+            <span class="recap-label">section(s) posée(s) sur vos pages</span>
+          </li>
+          <li>
+            <span class="recap-num">{{ store.navLinks().length }}</span>
+            <span class="recap-label">lien(s) de navigation dans <code>site.config.ts</code></span>
+          </li>
+          <li>
+            <span class="recap-num">{{ fileCount() }}</span>
+            <span class="recap-label">fichier(s) au total</span>
+          </li>
+        </ul>
+
+        <h2 class="panel-title panel-title--spaced">Palette appliquée</h2>
+        <div class="palette-row">
+          <span class="swatch" [style.background]="store.palette().brand.default" title="brand"></span>
+          <span class="swatch" [style.background]="store.palette().surface" title="surface"></span>
+          <span class="swatch" [style.background]="store.palette().pageBg" title="pageBg"></span>
+          <span class="swatch" [style.background]="store.palette().ink" title="ink"></span>
+          <span class="palette-name">{{ store.palette().name }}</span>
+        </div>
+        <p class="panel-note">
+          Écrite dans <code>client/src/config/theme.ts</code>, lu à la fois par Tailwind et par React.
+        </p>
+      </section>
+
+      <section class="panel panel--tree">
+        <h2 class="panel-title">Arborescence générée</h2>
+        <div class="tree" role="img" aria-label="Arborescence du projet généré">
+          <div class="tree-root">{{ project().rootDir }}/</div>
+          @for (line of tree(); track $index) {
+            <div class="tree-line" [class.is-dir]="!line.isFile" [style.padding-left.px]="12 + line.depth * 16">
+              <span class="tree-branch" aria-hidden="true">{{ line.isLast ? '└─' : '├─' }}</span>
+              <span class="tree-label">{{ line.label }}</span>
+            </div>
+          }
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="actionbar">
+    <button type="button" class="btn-back" (click)="back()">← Config. site</button>
+    <span class="action-hint">
+      @if (error()) {
+        <span class="action-error">{{ error() }}</span>
+      } @else {
+        Prêt à télécharger — {{ fileCount() }} fichiers
+      }
+    </span>
+    <button type="button" class="btn-next" (click)="download()" [disabled]="downloading()">
+      @if (downloading()) { Création du ZIP… } @else { ↓ Télécharger le projet }
+    </button>
+  </div>
+
+</div>

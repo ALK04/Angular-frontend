@@ -1,0 +1,620 @@
+﻿<div class="page">
+
+  <app-composer-topbar />
+
+  <app-step-pill [steps]="steps" [currentIndex]="currentStepIndex" />
+
+  <main class="stage">
+    <div class="stage-head">
+      <p class="eyebrow">{{ eyebrow }}</p>
+      <h1>Configuration du site</h1>
+      <p class="sub">Organisez vos sections par page, configurez la navigation et prévisualisez le résultat en direct.</p>
+    </div>
+
+    <!-- ══ BLOC 1 : Structure des pages ══ -->
+    <div class="content-card">
+      <div class="content-card-head">
+        <h2 class="content-card-title">Structure des pages</h2>
+        <p class="content-card-sub">Glissez les sections entre les colonnes pour les organiser par page.</p>
+      </div>
+      <div class="kanban-wrap">
+
+    <!-- ══ KANBAN ══ -->
+    <div class="kanban">
+
+      @for (page of store.pages(); track page.id) {
+
+        <!-- Layout column -->
+        @if (page.isLayout) {
+          <div class="column column--layout">
+            <div class="col-head col-head--layout">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <rect x="1" y="1" width="12" height="3" rx="1" stroke="currentColor" stroke-width="1.2"/>
+                <rect x="1" y="6" width="5" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/>
+                <rect x="8" y="6" width="5" height="7" rx="1" stroke="currentColor" stroke-width="1.2"/>
+              </svg>
+              <span class="col-name">{{ page.name }}</span>
+              <span class="col-badge">Global</span>
+            </div>
+
+            <ul class="col-body"
+                (dragover)="onColBodyDragOver(page.id, page.sections.length, $event)"
+                (drop)="onColBodyDrop(page.id, page.sections.length, $event)">
+
+              @for (section of page.sections; track section.variantId; let i = $index) {
+                <li class="section-card section-card--layout"
+                    draggable="true"
+                    [class.is-dragging]="isDragging(page.id, i)"
+                    [class.is-drop-before]="isDropBefore(page.id, i)"
+                    [class.is-drop-after]="isDropAfter(page.id, i)"
+                    (dragstart)="onSectionDragStart(page.id, i, $event)"
+                    (dragover)="onCardDragOver(page.id, i, $event)"
+                    (drop)="onCardDrop(page.id, i, $event)"
+                    (dragend)="onDragEnd()">
+                  <span class="section-icon" aria-hidden="true">{{ getSectionIcon(section.sectionType) }}</span>
+                  <span class="section-label">{{ getSectionLabel(section) }}</span>
+                  <span class="section-type-tag">{{ section.sectionType }}</span>
+                  <button type="button" class="section-remove"
+                    (click)="store.removeSectionFromPage(page.id, section.variantId)"
+                    aria-label="Retirer">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                      <path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                </li>
+              }
+
+              @if (page.sections.length === 0) {
+                <li class="col-empty">Navbar &amp; Footer ici</li>
+              }
+            </ul>
+          </div>
+          <div class="kanban-sep" aria-hidden="true"></div>
+        }
+
+        <!-- Regular page column -->
+        @if (!page.isLayout) {
+          <div class="column">
+            <div class="col-head">
+              @if (editingPageId() === page.id) {
+                <input class="col-name-input"
+                  [value]="editingName()"
+                  (input)="onRenameInput($event)"
+                  (blur)="commitRename(page.id)"
+                  (keydown.enter)="commitRename(page.id)"
+                  autofocus aria-label="Renommer" />
+              } @else {
+                <span class="col-name" (dblclick)="startRename(page.id, page.name)" title="Double-clic pour renommer">
+                  {{ page.name }}
+                </span>
+              }
+              <span class="col-count">{{ page.sections.length }}</span>
+              <div class="col-actions">
+                <button type="button" class="col-btn" (click)="startRename(page.id, page.name)" title="Renommer">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M8.5 1.5a1.5 1.5 0 012.12 2.12L3.87 10.37l-2.74.37.37-2.74L8.5 1.5z"
+                      stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                @if (contentPages.length > 1) {
+                  <button type="button" class="col-btn col-btn--danger" (click)="store.removePage(page.id)" title="Supprimer">
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                      <path d="M1.5 1.5l8 8M9.5 1.5l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <ul class="col-body"
+                (dragover)="onColBodyDragOver(page.id, page.sections.length, $event)"
+                (drop)="onColBodyDrop(page.id, page.sections.length, $event)">
+
+              @for (section of page.sections; track section.variantId; let i = $index) {
+                <li class="section-card"
+                    draggable="true"
+                    [class.is-dragging]="isDragging(page.id, i)"
+                    [class.is-drop-before]="isDropBefore(page.id, i)"
+                    [class.is-drop-after]="isDropAfter(page.id, i)"
+                    (dragstart)="onSectionDragStart(page.id, i, $event)"
+                    (dragover)="onCardDragOver(page.id, i, $event)"
+                    (drop)="onCardDrop(page.id, i, $event)"
+                    (dragend)="onDragEnd()">
+                  <span class="drag-dots" aria-hidden="true">
+                    <svg width="10" height="14" viewBox="0 0 10 14" fill="none">
+                      <circle cx="3" cy="3"  r="1.3" fill="currentColor"/>
+                      <circle cx="7" cy="3"  r="1.3" fill="currentColor"/>
+                      <circle cx="3" cy="7"  r="1.3" fill="currentColor"/>
+                      <circle cx="7" cy="7"  r="1.3" fill="currentColor"/>
+                      <circle cx="3" cy="11" r="1.3" fill="currentColor"/>
+                      <circle cx="7" cy="11" r="1.3" fill="currentColor"/>
+                    </svg>
+                  </span>
+                  <span class="section-idx">{{ (i + 1 < 10 ? '0' : '') + (i + 1) }}</span>
+                  <span class="section-label">{{ getSectionLabel(section) }}</span>
+                  <button type="button" class="section-remove"
+                    (click)="store.removeSectionFromPage(page.id, section.variantId)"
+                    aria-label="Retirer">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                      <path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                </li>
+              }
+
+              @if (page.sections.length === 0) {
+                <li class="col-empty">Déposez ici</li>
+              }
+            </ul>
+          </div>
+        }
+
+      }
+
+      <!-- Add page -->
+      <div class="col-add">
+        <p class="col-add-label">Nouvelle page</p>
+        <input class="col-add-input" type="text"
+          placeholder="Nom…"
+          [value]="newPageName()"
+          (input)="onNewPageInput($event)"
+          (keydown.enter)="addPage()"
+          aria-label="Nom de la nouvelle page" />
+        <button type="button" class="col-add-btn"
+          [disabled]="!newPageName().trim()"
+          (click)="addPage()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          Ajouter
+        </button>
+      </div>
+
+    </div><!-- /kanban -->
+
+    <!-- Pool -->
+    @if (store.availableSections().length > 0) {
+      <div class="pool">
+        <p class="pool-label">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+            <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M6.5 4v3.5M6.5 9v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          Sections non assignées
+        </p>
+        <div class="pool-chips">
+          @for (section of store.availableSections(); track section.variantId) {
+            <div class="pool-chip"
+                 [class.is-used]="section.sectionType === 'navbar' && isNavbarInLayout"
+                 draggable="true"
+                 (dragstart)="onPoolDragStart(section, $event)"
+                 (dragend)="onDragEnd()">
+              <svg width="9" height="13" viewBox="0 0 9 13" fill="none" aria-hidden="true">
+                <circle cx="2.5" cy="2.5"  r="1.2" fill="currentColor"/>
+                <circle cx="6.5" cy="2.5"  r="1.2" fill="currentColor"/>
+                <circle cx="2.5" cy="6.5"  r="1.2" fill="currentColor"/>
+                <circle cx="6.5" cy="6.5"  r="1.2" fill="currentColor"/>
+                <circle cx="2.5" cy="10.5" r="1.2" fill="currentColor"/>
+                <circle cx="6.5" cy="10.5" r="1.2" fill="currentColor"/>
+              </svg>
+              <span>{{ getSectionLabel(section) }}</span>
+              <div class="chip-pages">
+                @for (page of store.pages(); track page.id) {
+                  <button type="button" class="chip-page-btn"
+                    (click)="addToPage(page.id, section)">
+                    {{ page.name }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+      </div><!-- /kanban-wrap -->
+    </div><!-- /content-card structure -->
+
+    <!-- ══ LIENS NAVBAR ══ -->
+    <section class="content-card" aria-label="Liens de la navbar">
+      <div class="content-card-head">
+        <div class="nav-editor-title">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="1" y="3" width="14" height="2" rx="1" fill="currentColor" opacity=".7"/>
+            <rect x="1" y="7" width="10" height="2" rx="1" fill="currentColor" opacity=".4"/>
+            <rect x="1" y="11" width="12" height="2" rx="1" fill="currentColor" opacity=".3"/>
+          </svg>
+          <h2 class="content-card-title">Liens de la navbar</h2>
+        </div>
+        <p class="content-card-sub">Glissez pour réordonner · choisissez le type de chaque lien.</p>
+      </div>
+
+      <ul class="nav-links-list">
+        @for (link of store.navLinks(); track link.id; let i = $index) {
+          <li class="nav-link-row"
+              [class.is-link-over]="linkDropIdx() === i"
+              draggable="true"
+              (dragstart)="onLinkDragStart(i, $event)"
+              (dragover)="onLinkDragOver(i, $event)"
+              (drop)="onLinkDrop(i, $event)"
+              (dragend)="onLinkDragEnd()">
+
+            <span class="link-drag-handle" aria-hidden="true">
+              <svg width="10" height="14" viewBox="0 0 10 14" fill="none">
+                <circle cx="3" cy="3"  r="1.3" fill="currentColor"/>
+                <circle cx="7" cy="3"  r="1.3" fill="currentColor"/>
+                <circle cx="3" cy="7"  r="1.3" fill="currentColor"/>
+                <circle cx="7" cy="7"  r="1.3" fill="currentColor"/>
+                <circle cx="3" cy="11" r="1.3" fill="currentColor"/>
+                <circle cx="7" cy="11" r="1.3" fill="currentColor"/>
+              </svg>
+            </span>
+
+            <input class="link-label-input" type="text"
+              [value]="link.label"
+              (input)="onLinkLabelInput(link, $event)"
+              placeholder="Libellé" />
+
+            <select class="link-type-select"
+              [value]="link.type"
+              (change)="onLinkTypeChange(link, $event)">
+              <option value="page">→ Page</option>
+              <option value="anchor">⚓ Ancre</option>
+              <option value="external">↗ Externe</option>
+            </select>
+
+            @if (link.type === 'page' || link.type === 'anchor') {
+              <select class="link-target-select"
+                [value]="link.pageId ?? ''"
+                (change)="onLinkPageChange(link, $event)">
+                <option value="" disabled>
+                  @if (link.type === 'page') { Choisir une page… }
+                  @else { Choisir la page cible… }
+                </option>
+                @for (page of contentPages; track page.id) {
+                  <option [value]="page.id">{{ page.name }}</option>
+                }
+              </select>
+            }
+
+            @if (link.type === 'anchor' && link.pageId) {
+              @if (sectionsForPage(link.pageId).length > 0) {
+                <select class="link-target-select"
+                  [value]="link.anchorVariantId ?? ''"
+                  (change)="onLinkAnchorChange(link, $event)"
+                  aria-label="Section cible de l'ancre">
+                  <option value="" disabled>Choisir une section…</option>
+                  @for (section of sectionsForPage(link.pageId); track section.variantId) {
+                    <option [value]="section.variantId">{{ getSectionLabel(section) }}</option>
+                  }
+                </select>
+              } @else {
+                <span class="anchor-hint">cette page n'a encore aucune section</span>
+              }
+            }
+
+            @if (link.type === 'external') {
+              <input class="link-target-input" type="url"
+                [value]="link.url ?? ''"
+                (input)="onLinkUrlInput(link, $event)"
+                placeholder="https://…" />
+            }
+
+            <button type="button" class="link-remove-btn"
+              (click)="store.removeNavLink(link.id)"
+              aria-label="Supprimer">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                <path d="M1.5 1.5l8 8M9.5 1.5l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </li>
+        }
+      </ul>
+
+      <button type="button" class="nav-add-btn" (click)="store.addNavLink()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        Ajouter un lien
+      </button>
+    </section>
+
+    <!-- ══ PALETTE DE COULEURS ══ -->
+    <section class="content-card" aria-label="Palette de couleurs">
+      <div class="content-card-head palette-section-head">
+        <div>
+          <h2 class="content-card-title">Palette de couleurs</h2>
+          <p class="content-card-sub">
+            Choisissez un style global — fond de page, couleur des sections, teinte principale.
+            L'aperçu se met à jour immédiatement.
+          </p>
+        </div>
+        <button type="button" class="palette-add-btn" (click)="openCreator()" aria-label="Créer une palette personnalisée">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+            <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          Nouvelle palette
+        </button>
+      </div>
+
+      <!-- Palettes prédéfinies + palettes personnalisées -->
+      <div class="palette-grid">
+
+        <!-- Presets -->
+        @for (palette of palettes; track palette.id) {
+          <button type="button" class="palette-card"
+            [class.is-selected]="store.palette().id === palette.id"
+            (click)="store.setPalette(palette)"
+            [attr.aria-pressed]="store.palette().id === palette.id">
+            <ng-container *ngTemplateOutlet="paletteMock; context: { p: palette }"></ng-container>
+            <ng-container *ngTemplateOutlet="paletteInfo; context: { p: palette, custom: false }"></ng-container>
+          </button>
+        }
+
+        <!-- Palettes personnalisées (BDD) -->
+        @for (palette of store.customPalettes(); track palette.id) {
+          <button type="button" class="palette-card palette-card--custom"
+            [class.is-selected]="store.palette().id === palette.id"
+            (click)="store.setPalette(palette)"
+            [attr.aria-pressed]="store.palette().id === palette.id">
+            <ng-container *ngTemplateOutlet="paletteMock; context: { p: palette }"></ng-container>
+            <ng-container *ngTemplateOutlet="paletteInfo; context: { p: palette, custom: true }"></ng-container>
+          </button>
+        }
+
+      </div>
+
+    </section>
+
+    <!-- ── Templates réutilisables (mini maquette + infos) ── -->
+    <ng-template #paletteMock let-p="p">
+      <div class="palette-mock" [style.background]="p.pageBg">
+        <div class="mock-nav" [style.background]="p.surface">
+          <span class="mock-logo"   [style.background]="p.brand.default"></span>
+          <span class="mock-link"   [style.background]="p.ink + '22'"></span>
+          <span class="mock-link"   [style.background]="p.ink + '22'"></span>
+          <span class="mock-btn-sm" [style.background]="p.brand.default"></span>
+        </div>
+        <div class="mock-hero" [style.background]="p.surface">
+          <span class="mock-title" [style.background]="p.ink + '33'"></span>
+          <span class="mock-sub"   [style.background]="p.ink + '1a'"></span>
+          <span class="mock-cta"   [style.background]="p.brand.default"></span>
+        </div>
+        <div class="mock-section" [style.background]="p.pageBg">
+          <div class="mock-cards">
+            <span class="mock-card" [style.background]="p.surface"></span>
+            <span class="mock-card" [style.background]="p.surface"></span>
+            <span class="mock-card" [style.background]="p.surface"></span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #paletteInfo let-p="p" let-custom="custom">
+      <div class="palette-info">
+        <div class="palette-swatches">
+          <span class="swatch-dot" [style.background]="p.brand.default"></span>
+          <span class="swatch-dot" [style.background]="p.surface" style="border:1px solid rgba(0,0,0,.1)"></span>
+          <span class="swatch-dot" [style.background]="p.pageBg"  style="border:1px solid rgba(0,0,0,.08)"></span>
+          <span class="swatch-dot" [style.background]="p.ink"></span>
+        </div>
+        <div class="palette-text">
+          <span class="palette-name">{{ p.name }}</span>
+          @if (!custom) {
+            <span class="palette-desc">{{ p.description }}</span>
+          } @else {
+            <span class="palette-desc palette-desc--custom">Personnalisée</span>
+          }
+        </div>
+        @if (store.palette().id === p.id) {
+          <span class="palette-check" aria-hidden="true">✓</span>
+        }
+        @if (custom) {
+          <button type="button" class="palette-delete" aria-label="Supprimer"
+            (click)="deleteCustomPalette(p, $event)">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+              <path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </button>
+        }
+      </div>
+    </ng-template>
+
+    <!-- ══ APERÇU EN DIRECT ══ -->
+    <section class="content-card preview-card" aria-label="Aperçu global du site">
+
+      <!-- En-tête : titre + sélecteur de couleur -->
+      <div class="content-card-head">
+        <div class="preview-head-row">
+          <div>
+            <h2 class="content-card-title">Aperçu en direct</h2>
+            <p class="content-card-sub">
+              Navbar + sections de la page sélectionnée + footer — tel que rendu dans le navigateur.
+              Modifiez les sections dans le kanban ci-dessus pour voir l'aperçu se mettre à jour.
+            </p>
+          </div>
+          <div class="preview-accent-zone">
+            <app-accent-picker />
+          </div>
+        </div>
+      </div>
+
+      <!-- Chrome navigateur avec onglets de pages -->
+      <div class="preview-chrome">
+        <!-- Boutons de fenêtre -->
+        <div class="preview-chrome-dots" aria-hidden="true">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+
+        <!-- Onglets de pages (style navigateur) -->
+        <div class="preview-tabs" role="tablist" aria-label="Pages du site">
+          @for (page of contentPages; track page.id; let i = $index) {
+            <button
+              type="button"
+              role="tab"
+              class="preview-tab"
+              [class.is-active]="
+                activePreviewPage()?.id === page.id ||
+                (activePreviewPage() === null && i === 0)
+              "
+              [attr.aria-selected]="
+                activePreviewPage()?.id === page.id ||
+                (activePreviewPage() === null && i === 0)
+              "
+              (click)="setPreviewPage(page.id)">
+              <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true">
+                <rect x="1" y="1" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.1"/>
+              </svg>
+              {{ page.name }}
+            </button>
+          }
+        </div>
+
+        <!-- URL fictive + compteur de briques -->
+        <div class="preview-chrome-right">
+          <span class="preview-chrome-url">localhost:5173{{ activePreviewUrl() }}</span>
+          <span class="preview-chrome-count">
+            {{ previewSectionCount() }} brique{{ previewSectionCount() > 1 ? 's' : '' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Iframe d'aperçu -->
+      <div class="preview-body">
+        <iframe
+          class="preview-iframe"
+          [srcdoc]="compositeDoc()"
+          title="Aperçu global du site"
+          sandbox="allow-scripts"
+        ></iframe>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ══ MODAL CRÉATION PALETTE (hors content-card pour éviter overflow:hidden) ══ -->
+  @if (showCreator()) {
+    <div class="creator-backdrop" (click)="closeCreator()" aria-hidden="true"></div>
+    <div class="creator-panel" role="dialog" aria-modal="true" aria-label="Créer une palette" (click)="$event.stopPropagation()">
+
+      <div class="creator-header">
+        <h3 class="creator-title">Nouvelle palette</h3>
+        <button type="button" class="creator-close" (click)="closeCreator()" aria-label="Fermer">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mini-preview en direct -->
+      <div class="creator-preview">
+        <div class="palette-mock palette-mock--lg" [style.background]="draftPalette().pageBg">
+          <div class="mock-nav" [style.background]="draftPalette().surface">
+            <span class="mock-logo"   [style.background]="draftPalette().brand.default"></span>
+            <span class="mock-link"   [style.background]="draftPalette().ink + '22'"></span>
+            <span class="mock-link"   [style.background]="draftPalette().ink + '22'"></span>
+            <span class="mock-btn-sm" [style.background]="draftPalette().brand.default"></span>
+          </div>
+          <div class="mock-hero" [style.background]="draftPalette().surface">
+            <span class="mock-title" [style.background]="draftPalette().ink + '33'"></span>
+            <span class="mock-sub"   [style.background]="draftPalette().ink + '1a'"></span>
+            <span class="mock-cta"   [style.background]="draftPalette().brand.default"></span>
+          </div>
+          <div class="mock-section" [style.background]="draftPalette().pageBg">
+            <div class="mock-cards">
+              <span class="mock-card" [style.background]="draftPalette().surface"></span>
+              <span class="mock-card" [style.background]="draftPalette().surface"></span>
+              <span class="mock-card" [style.background]="draftPalette().surface"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulaire -->
+      <div class="creator-form">
+
+        <label class="creator-field">
+          <span class="creator-label">Nom</span>
+          <input class="creator-input" type="text"
+            [ngModel]="draft().name"
+            (ngModelChange)="updateDraft('name', $event)"
+            placeholder="Ex : Coucher de soleil" maxlength="40" />
+        </label>
+
+        <div class="creator-colors">
+          <label class="creator-color-field">
+            <span class="creator-label">Couleur principale</span>
+            <div class="color-input-wrap">
+              <input type="color"
+                [ngModel]="draft().brandDefault"
+                (ngModelChange)="updateDraft('brandDefault', $event)" />
+              <span class="color-hex">{{ draft().brandDefault }}</span>
+            </div>
+            <span class="creator-hint">Boutons · liens · accents</span>
+          </label>
+
+          <label class="creator-color-field">
+            <span class="creator-label">Fond des sections</span>
+            <div class="color-input-wrap">
+              <input type="color"
+                [ngModel]="draft().surface"
+                (ngModelChange)="updateDraft('surface', $event)" />
+              <span class="color-hex">{{ draft().surface }}</span>
+            </div>
+            <span class="creator-hint">Remplace bg-white des templates</span>
+          </label>
+
+          <label class="creator-color-field">
+            <span class="creator-label">Fond de page</span>
+            <div class="color-input-wrap">
+              <input type="color"
+                [ngModel]="draft().pageBg"
+                (ngModelChange)="updateDraft('pageBg', $event)" />
+              <span class="color-hex">{{ draft().pageBg }}</span>
+            </div>
+            <span class="creator-hint">Arrière-plan global du site</span>
+          </label>
+
+          <label class="creator-color-field">
+            <span class="creator-label">Couleur du texte</span>
+            <div class="color-input-wrap">
+              <input type="color"
+                [ngModel]="draft().ink"
+                (ngModelChange)="updateDraft('ink', $event)" />
+              <span class="color-hex">{{ draft().ink }}</span>
+            </div>
+            <span class="creator-hint">Titres · corps de texte</span>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="creator-footer">
+        <button type="button" class="creator-cancel" (click)="closeCreator()">Annuler</button>
+        <button type="button" class="creator-save"
+          [disabled]="!draft().name.trim() || saving()"
+          (click)="savePalette()">
+          @if (saving()) { Enregistrement… } @else { Enregistrer la palette → }
+        </button>
+      </div>
+
+    </div>
+  }
+
+  <footer class="actionbar">
+    <span class="action-hint">
+      @if (contentPages.length === 1) {
+        1 page · navbar avec ancres · {{ store.navLinks().length }} liens.
+      } @else {
+        {{ contentPages.length }} pages · {{ store.navLinks().length }} liens dans la navbar.
+      }
+    </span>
+    <button type="button" class="btn-next" (click)="continue()">
+      Générer →
+    </button>
+  </footer>
+
+</div>

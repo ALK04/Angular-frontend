@@ -1,0 +1,25 @@
+<section class="features" id="fonctionnalites">
+  <div class="shell">
+    <header class="head" [appReveal]="0">
+      <p class="lbl">§ 04 · L'atelier</p>
+      <h2>Tout se règle dans le navigateur.</h2>
+      <p class="sub">
+        Quatre principes, pour ne jamais toucher à la plomberie avant d'en avoir
+        envie.
+      </p>
+    </header>
+
+    <ul class="cards">
+      @for (feature of features; track feature.label; let i = $index) {
+        <li class="card" [appReveal]="i * 80">
+          <div class="card-top">
+            <span class="card-index">{{ '0' + (i + 1) }}</span>
+            <span class="card-label">{{ feature.label }}</span>
+          </div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

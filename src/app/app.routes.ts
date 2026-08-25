@@ -1,3 +1,57 @@
 import { Routes } from '@angular/router';
+import { Landing } from './features/landing/landing';
+import { Composer } from './features/composer/composer';
+import { Sections } from './features/composer/steps/sections/sections';
+import { HeroStep } from './features/composer/steps/hero/hero-step';
+import { FeaturesStep } from './features/composer/steps/features/features-step';
+import { PricingStep } from './features/composer/steps/pricing/pricing-step';
+import { StatsStep } from './features/composer/steps/stats/stats-step';
+import { TestimonialsStep } from './features/composer/steps/testimonials/testimonials-step';
+import { BlogStep } from './features/composer/steps/blog/blog-step';
+import { CtaStep } from './features/composer/steps/cta/cta-step';
+import { FaqStep } from './features/composer/steps/faq/faq-step';
+import { ContactStep } from './features/composer/steps/contact/contact-step';
+import { FooterStep } from './features/composer/steps/footer/footer-step';
+import { LogosStep } from './features/composer/steps/logos/logos-step';
+import { PortfolioStep } from './features/composer/steps/portfolio/portfolio-step';
+import { StoryStep } from './features/composer/steps/story/story-step';
+import { TeamStep } from './features/composer/steps/team/team-step';
+import { VideoStep } from './features/composer/steps/video/video-step';
+import { ProcessStep } from './features/composer/steps/process/process-step';
+import { NavbarStep } from './features/composer/steps/navbar/navbar-step';
+import { HeaderStep } from './features/composer/steps/header/header-step';
+import { FormsStep } from './features/composer/steps/forms/forms-step';
+import { QuoteStep } from './features/composer/steps/quote/quote-step';
+import { ProductStep } from './features/composer/steps/product/product-step';
+import { PagesStep } from './features/composer/steps/pages/pages-step';
+import { GenerateStep } from './features/composer/steps/generate/generate-step';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  { path: '', component: Landing },
+  { path: 'composer', component: Composer },
+  { path: 'composer/navbar', component: NavbarStep },
+  { path: 'composer/sections', component: Sections },
+  { path: 'composer/hero', component: HeroStep },
+  { path: 'composer/header', component: HeaderStep },
+  { path: 'composer/features', component: FeaturesStep },
+  { path: 'composer/process', component: ProcessStep },
+  { path: 'composer/video', component: VideoStep },
+  { path: 'composer/pricing', component: PricingStep },
+  { path: 'composer/story', component: StoryStep },
+  { path: 'composer/stats', component: StatsStep },
+  { path: 'composer/team', component: TeamStep },
+  { path: 'composer/testimonials', component: TestimonialsStep },
+  { path: 'composer/quote', component: QuoteStep },
+  { path: 'composer/logos', component: LogosStep },
+  { path: 'composer/portfolio', component: PortfolioStep },
+  { path: 'composer/product', component: ProductStep },
+  { path: 'composer/blog', component: BlogStep },
+  { path: 'composer/cta', component: CtaStep },
+  { path: 'composer/faq', component: FaqStep },
+  { path: 'composer/forms', component: FormsStep },
+  { path: 'composer/contact', component: ContactStep },
+  { path: 'composer/footer', component: FooterStep },
+  { path: 'composer/pages', component: PagesStep },
+  { path: 'composer/generer', component: GenerateStep },
+  { path: '**', redirectTo: '' },
+];

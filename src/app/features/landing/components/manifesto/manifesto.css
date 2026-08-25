@@ -1,0 +1,86 @@
+.manifesto {
+  padding: var(--section-y) 0;
+  border-top: 1px solid var(--line);
+}
+
+.statement {
+  max-width: 46rem;
+  margin: 1.6rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3.4vw, 2.5rem);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+}
+.statement .dim { color: var(--ink-faint); }
+.statement .hl {
+  display: block;
+  margin-top: 0.6rem;
+  color: var(--violet);
+}
+
+.contrast {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.note {
+  position: relative;
+  padding: 1.5rem 1.6rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+.note-after {
+  border-color: transparent;
+  background: var(--ink);
+  color: var(--white);
+  box-shadow: var(--shadow-soft);
+}
+
+.note-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1.1rem;
+}
+.note-after .note-tag { color: var(--amber); }
+
+.note ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
+.note li {
+  position: relative;
+  padding-left: 1.3rem;
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.note-after li { color: rgba(255, 255, 255, 0.78); }
+
+.note li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0.55em;
+  width: 7px; height: 1px;
+  background: var(--ink-faint);
+}
+.note-before li::before { background: var(--line-strong); }
+.note-after li::before { background: var(--amber); }
+
+.note code {
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  padding: 0.1em 0.4em;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+}
+
+@media (max-width: 720px) {
+  .contrast { grid-template-columns: 1fr; }
+}

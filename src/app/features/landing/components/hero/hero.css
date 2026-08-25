@@ -1,0 +1,246 @@
+.hero {
+  position: relative;
+  padding: clamp(3.5rem, 7vw, 6rem) 0 clamp(4rem, 8vw, 6.5rem);
+  overflow: hidden;
+}
+
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.04fr 0.96fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+/* ---------- Thèse ---------- */
+.copy { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+.copy h1 {
+  font-size: clamp(2.6rem, 5.4vw, 4.1rem);
+  font-weight: 600;
+  margin: 1.1rem 0 1.4rem;
+}
+.accent {
+  position: relative;
+  color: var(--violet);
+}
+/* Soulignement ambre qui se trace au chargement (seule touche d'ambre du hero) */
+.accent::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0.06em;
+  width: 100%; height: 0.1em;
+  border-radius: 3px;
+  background: var(--amber);
+  opacity: 0.55;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: draw 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s forwards;
+}
+
+.lede {
+  font-size: 1.12rem;
+  font-weight: 300;
+  color: var(--ink-soft);
+  max-width: 32rem;
+  margin: 0 0 2rem;
+}
+.lede strong { font-weight: 600; color: var(--ink); }
+
+.actions { display: flex; gap: 0.85rem; flex-wrap: wrap; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.98rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 11px;
+  transition: transform 0.06s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.btn span { transition: transform 0.2s ease; }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--violet); color: var(--white); }
+.btn-primary:hover { background: var(--violet-deep); }
+.btn-primary:hover span { transform: translateX(3px); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+}
+.btn-ghost:hover { border-color: var(--ink); }
+
+/* Fiche technique */
+.spec {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 1.6rem;
+  margin: 2.6rem 0 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+.spec-item dt {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.4rem;
+}
+.spec-item dd {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ---------- Signature : table à dessin ---------- */
+.plan {
+  position: relative;
+  height: 460px;
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.12s both;
+}
+
+.stack {
+  position: absolute;
+  inset: 0;
+}
+
+/* Feuilles de calque : papier translucide, fines cotes */
+.sheet {
+  position: absolute;
+  border-radius: 14px;
+  border: 1px solid var(--frost-line, rgba(20,18,31,0.12));
+  background: var(--frost);
+  backdrop-filter: blur(7px);
+  box-shadow: var(--shadow-soft);
+  padding: 1rem 1.1rem;
+}
+.sheet-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.sheet-back {
+  top: 60px; left: 8%;
+  width: 70%; height: 90px;
+  transform: rotate(-4deg);
+  background: var(--frost);
+  animation: floatBack 7.5s ease-in-out infinite;
+}
+.sheet-mid {
+  top: 150px; left: 18%;
+  width: 74%; height: 170px;
+  transform: rotate(2.5deg);
+  border-color: var(--violet);
+  box-shadow: 0 0 0 1px var(--violet), var(--shadow-lift);
+  background: var(--frost-strong);
+  z-index: 2;
+  animation: floatMid 6s ease-in-out infinite;
+}
+.sheet-front {
+  top: 14px; left: 26%;
+  width: 64%; height: 70px;
+  transform: rotate(-1.5deg);
+  z-index: 3;
+  animation: floatFront 5.4s ease-in-out infinite;
+}
+
+/* Chaque calque dérive à son rythme : effet de parallaxe entre les couches */
+@keyframes floatBack {
+  0%, 100% { transform: rotate(-4deg) translateY(0); }
+  50%      { transform: rotate(-4deg) translateY(-9px); }
+}
+@keyframes floatMid {
+  0%, 100% { transform: rotate(2.5deg) translateY(0); }
+  50%      { transform: rotate(2.5deg) translateY(-14px); }
+}
+@keyframes floatFront {
+  0%, 100% { transform: rotate(-1.5deg) translateY(0); }
+  50%      { transform: rotate(-1.5deg) translateY(-6px); }
+}
+
+/* Mini-wireframe à l'intérieur des feuilles */
+.wire { display: block; border-radius: 4px; background: var(--paper-2); }
+.wire-nav { margin-top: 0.7rem; height: 8px; width: 78%; }
+.wire-row { margin-top: 0.8rem; height: 30px; width: 88%; }
+.wire-title { margin-top: 0.9rem; height: 14px; width: 62%; background: var(--ink); opacity: 0.85; }
+.wire-line { margin-top: 0.55rem; height: 8px; width: 84%; }
+.wire-btn   { margin-top: 0.9rem; height: 22px; width: 38%; background: var(--violet); }
+
+/* Annotations façon dessin technique */
+.anno {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--violet-deep);
+  white-space: nowrap;
+}
+.anno-mid {
+  top: 0.85rem; right: 1.1rem;
+  display: inline-flex; align-items: center; gap: 0.45rem;
+}
+.anno-mid::before {
+  content: '';
+  width: 18px; height: 1px;
+  background: currentColor; opacity: 0.6;
+}
+.anno-out {
+  bottom: -6px; right: 4%;
+  color: var(--ink-faint);
+}
+
+/* Résultat : la pile devient un projet */
+.result {
+  position: absolute;
+  bottom: 8px; left: 2%;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.95rem;
+  border-radius: 11px;
+  background: var(--ink);
+  color: var(--white);
+  box-shadow: var(--shadow-lift);
+}
+.result-glyph {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--amber);
+}
+.result-text { font-family: var(--font-mono); font-size: 0.86rem; font-weight: 700; }
+.result-meta {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.04em;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes draw {
+  to { transform: scaleX(1); }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 940px) {
+  .grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .plan { height: 400px; max-width: 460px; }
+}
+@media (max-width: 520px) {
+  .spec { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .plan { height: 360px; }
+  .result-meta { display: none; }
+}

@@ -1,0 +1,62 @@
+﻿<div class="sections-page">
+
+  <!-- Topbar -->
+  <app-composer-topbar />
+
+  <app-step-pill [steps]="steps" [currentIndex]="currentStepIndex" />
+
+  <!-- Contenu -->
+  <main class="stage">
+    <div class="stage-head">
+      <p class="eyebrow">{{ eyebrow }}</p>
+      <h1>Quelles sections sur votre site ?</h1>
+      <div class="head-row">
+        <p class="sub">Sélectionnez les blocs à inclure. Vous pourrez les réordonner après.</p>
+        @if (selectedCount > 0) {
+          <span class="count-pill">{{ selectedCount }} sélectionnée{{ selectedCount > 1 ? 's' : '' }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="grid">
+      @for (section of sections; track section.id) {
+        <button
+          type="button"
+          class="card"
+          [class.is-selected]="store.selectedSections().has(section.id)"
+          (click)="store.toggleSection(section.id)"
+          [attr.aria-pressed]="store.selectedSections().has(section.id)"
+        >
+          <!-- Wireframe SVG -->
+          <div class="thumb" [innerHTML]="svgSafe(section.svg)"></div>
+
+          <!-- Check badge -->
+          @if (store.selectedSections().has(section.id)) {
+            <span class="badge" aria-hidden="true">✓</span>
+          }
+
+          <!-- Infos -->
+          <div class="card-body">
+            <span class="card-name">{{ section.name }}</span>
+            <span class="card-desc">{{ section.description }}</span>
+          </div>
+        </button>
+      }
+    </div>
+  </main>
+
+  <!-- Actionbar -->
+  <footer class="actionbar">
+    <span class="action-hint">
+      @if (store.canContinueSections()) {
+        {{ selectedCount }} section{{ selectedCount > 1 ? 's' : '' }} sélectionnée{{ selectedCount > 1 ? 's' : '' }} · étape suivante : {{ nextStepLabel }}
+      } @else {
+        Sélectionnez au moins une section
+      }
+    </span>
+    <button type="button" class="btn-next" [disabled]="!store.canContinueSections()" (click)="continue()">
+      Continuer →
+    </button>
+  </footer>
+
+</div>

@@ -1,0 +1,96 @@
+:host {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  pointer-events: none;
+}
+
+.pill {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 20px 8px;
+  border-radius: 20px;
+  background: rgba(18, 15, 32, 0.93);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.65),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  overflow: hidden;
+  position: relative;
+  min-width: 260px;
+  max-width: 400px;
+  white-space: nowrap;
+}
+
+/* Fond semi-transparent qui "se charge" de gauche à droite */
+.pill-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: var(--prog);
+  background: linear-gradient(90deg, rgba(91, 61, 245, 0.25) 0%, rgba(91, 61, 245, 0.06) 100%);
+  transition: width 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.pill-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.pill-step {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7c5ff8;
+}
+
+.pill-sep {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.7rem;
+}
+
+.pill-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.9);
+  flex: 1;
+}
+
+.pill-count {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  color: rgba(255, 255, 255, 0.28);
+  letter-spacing: 0.04em;
+}
+
+/* Barre de progression */
+.pill-track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.pill-bar {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: var(--prog);
+  background: linear-gradient(90deg, #5b3df5 0%, #8b6af8 100%);
+  border-radius: inherit;
+  transition: width 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill-fill, .pill-bar { transition: none; }
+}
