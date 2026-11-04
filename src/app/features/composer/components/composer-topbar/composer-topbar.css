@@ -180,7 +180,59 @@
 .topbar-right {
   display: flex;
   align-items: center;
+  gap: 12px;
   flex-shrink: 0;
+}
+
+/* ── Brouillon local ── */
+.draft-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.34);
+  white-space: nowrap;
+  user-select: none;
+  cursor: default;
+}
+
+.draft-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.7);
+}
+
+/* ── Recommencer ── */
+.reset-btn {
+  padding: 6px 12px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.reset-btn:hover {
+  color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Second clic : l'action est destructrice, le bouton le dit. */
+.reset-btn.is-confirming,
+.reset-btn.is-confirming:hover {
+  color: #fecdd3;
+  border-color: rgba(244, 63, 94, 0.55);
+  background: rgba(244, 63, 94, 0.16);
 }
 
 .theme-zone {
@@ -225,7 +277,8 @@
     display: none;
   }
 
-  .theme-label {
+  .theme-label,
+  .draft-badge {
     display: none;
   }
 

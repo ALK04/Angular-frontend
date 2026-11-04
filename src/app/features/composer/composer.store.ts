@@ -1,7 +1,8 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, WritableSignal, computed, effect, signal, untracked } from '@angular/core';
 import { ACCENT_PRESETS, AccentPreset } from './data/accents';
 import { PALETTE_PRESETS, ColorPalette } from './data/palettes';
 import { COMPOSER_STEPS } from './data/steps';
+import { ComposerSnapshot, DRAFT_VERSION, clearDraft, readDraft, writeDraft } from './composer.persistence';
 
 export interface PageSection {
   variantId: string;
@@ -112,6 +113,113 @@ export class ComposerStore {
 
   /** Sections sélectionnées (step structure) */
   readonly selectedSections = signal<Set<string>>(new Set());
+
+  /**
+   * Index `type de section` → signal correspondant.
+   * Évite de réénumérer les 20 familles à chaque sauvegarde / restauration.
+   * ⚠️ Une nouvelle famille de briques doit être ajoutée ici aussi, sinon elle
+   * n'est pas persistée dans le brouillon.
+   */
+  private readonly sectionIdSignals: ReadonlyMap<string, WritableSignal<string[]>> = new Map([
+    ['hero',         this.heroIds],
+    ['header',       this.headerIds],
+    ['features',     this.featuresIds],
+    ['process',      this.processIds],
+    ['video',        this.videoIds],
+    ['pricing',      this.pricingIds],
+    ['story',        this.storyIds],
+    ['stats',        this.statsIds],
+    ['team',         this.teamIds],
+    ['testimonials', this.testimonialsIds],
+    ['quote',        this.quoteIds],
+    ['logos',        this.logosIds],
+    ['portfolio',    this.portfolioIds],
+    ['product',      this.productIds],
+    ['blog',         this.blogIds],
+    ['cta',          this.ctaIds],
+    ['faq',          this.faqIds],
+    ['forms',        this.formsIds],
+    ['contact',      this.contactIds],
+    ['footer',       this.footerIds],
+  ]);
+
+  /** Vrai quand la session a démarré sur un brouillon retrouvé. */
+  readonly draftRestored = signal(false);
+
+  /** Horodatage de la dernière sauvegarde locale réussie (`null` si aucune). */
+  readonly draftSavedAt = signal<Date | null>(null);
+
+  constructor() {
+    const draft = readDraft();
+    if (draft) {
+      this.applySnapshot(draft);
+      this.draftRestored.set(true);
+    }
+
+    // `snapshot()` lit tous les signaux persistés : l'effet se réexécute donc
+    // au moindre choix de l'utilisateur et réécrit le brouillon.
+    effect(() => {
+      const snapshot = this.snapshot();
+      untracked(() => {
+        if (isEmptySnapshot(snapshot)) {
+          // Rien à retenir (première visite, ou « Recommencer ») : on ne laisse
+          // pas traîner un brouillon vide qui ferait croire à une reprise.
+          clearDraft();
+          this.draftSavedAt.set(null);
+          return;
+        }
+        if (writeDraft(snapshot)) this.draftSavedAt.set(new Date());
+      });
+    });
+  }
+
+  /** L'état persistable, relu intégralement à chaque exécution de l'effet. */
+  private snapshot(): ComposerSnapshot {
+    const sectionIds: Record<string, string[]> = {};
+    for (const [type, ids] of this.sectionIdSignals) sectionIds[type] = ids();
+
+    return {
+      version: DRAFT_VERSION,
+      savedAt: new Date().toISOString(),
+      projectName: this.projectName(),
+      navbarId: this.navbarId(),
+      accent: this.accent(),
+      palette: this.palette(),
+      selectedSections: [...this.selectedSections()],
+      sectionIds,
+      pages: this.pages(),
+      navLinks: this.navLinks(),
+    };
+  }
+
+  private applySnapshot(snapshot: ComposerSnapshot): void {
+    this.projectName.set(snapshot.projectName);
+    this.navbarId.set(snapshot.navbarId);
+    this.accent.set(snapshot.accent);
+    this.palette.set(snapshot.palette);
+    this.selectedSections.set(new Set(snapshot.selectedSections));
+    for (const [type, ids] of this.sectionIdSignals) ids.set(snapshot.sectionIds[type] ?? []);
+    this.pages.set(snapshot.pages);
+    this.navLinks.set(snapshot.navLinks);
+  }
+
+  /**
+   * Repart d'une composition vierge et supprime le brouillon.
+   * Les palettes personnalisées ne sont pas touchées : elles viennent de la BDD,
+   * pas de la composition.
+   */
+  reset(): void {
+    this.projectName.set('Mon site');
+    this.navbarId.set(null);
+    this.accent.set(ACCENT_PRESETS[0]);
+    this.palette.set(PALETTE_PRESETS[0]);
+    this.selectedSections.set(new Set());
+    for (const [, ids] of this.sectionIdSignals) ids.set([]);
+    this.pages.set([]);
+    this.navLinks.set([]);
+    this.draftRestored.set(false);
+    clearDraft();
+  }
 
   readonly canContinueNavbar       = computed(() => this.navbarId() !== null);
   readonly canContinueHero         = computed(() => this.heroIds().length > 0);
@@ -439,4 +547,15 @@ export class ComposerStore {
   private _toggle(ids: string[], id: string): string[] {
     return ids.includes(id) ? ids.filter(x => x !== id) : [...ids, id];
   }
+}
+
+/**
+ * Une composition sans navbar, sans section cochée et sans page n'a rien à
+ * retenir : le nom de projet et la palette seuls ne valent pas un brouillon.
+ */
+function isEmptySnapshot(snapshot: ComposerSnapshot): boolean {
+  return snapshot.navbarId === null
+    && snapshot.selectedSections.length === 0
+    && snapshot.pages.length === 0
+    && snapshot.navLinks.length === 0;
 }

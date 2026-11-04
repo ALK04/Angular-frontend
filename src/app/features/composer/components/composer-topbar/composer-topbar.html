@@ -36,6 +36,26 @@
 
   <!-- ── Droite ── -->
   <div class="topbar-right">
+
+    <!-- Brouillon local -->
+    @if (store.draftSavedAt(); as savedAt) {
+      <span class="draft-badge" [title]="savedAtLabel(savedAt)">
+        <span class="draft-dot" aria-hidden="true"></span>
+        Brouillon enregistré
+      </span>
+    }
+
+    @if (store.navbarId()) {
+      <button
+        type="button"
+        class="reset-btn"
+        [class.is-confirming]="confirmingReset()"
+        (click)="askReset()"
+      >
+        @if (confirmingReset()) { Confirmer ? } @else { Recommencer }
+      </button>
+    }
+
     <div class="theme-zone">
       <span class="theme-label" aria-hidden="true">Thème</span>
       <app-accent-picker />
